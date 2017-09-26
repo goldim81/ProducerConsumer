@@ -1,5 +1,5 @@
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class Main {
@@ -10,16 +10,6 @@ public class Main {
         Thread trReader = new Thread(new Reader(fileName, queue));
         Thread trCounter = new Thread(counter);
         trReader.start();
-        Thread.sleep(10);
         trCounter.start();
-        try {
-            trReader.join();
-            trCounter.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        System.out.println("Найдено слов: "+ counter.getCounter());
-
-
     }
 }

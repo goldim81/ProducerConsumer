@@ -4,13 +4,13 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 class Reader implements Runnable {
         private static int threadNum = 0;
-        private static boolean finish = false;
-        private static boolean start = false;
+        private static volatile boolean finish = false;
+        private static volatile boolean start = false;
         private final String threadName;
         private final String fileName;
         private final ConcurrentLinkedQueue<String> wordStore;
 
-        public Reader(String fileName, ConcurrentLinkedQueue wordStore) {
+        public Reader(String fileName, ConcurrentLinkedQueue<String> wordStore) {
             threadName = "Thread" + (++threadNum);
             this.fileName = fileName;
             this.wordStore = wordStore;
@@ -28,10 +28,12 @@ class Reader implements Runnable {
             String line;
             start = true;
             try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+                int countLine = 0;
                 while ((line = br.readLine()) != null) {
                     wordStore.add(line);
-//                    System.out.println("Записали строку.");
+                    countLine++;
                 }
+                System.out.println("Всего записано строк: " + countLine);
                 finish = true;
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
